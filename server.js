@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const { request } = require('express');
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -19,6 +20,10 @@ app.get('/', (request, response) => {
 
   }
   response.render('pages/index', viewModel);
+})
+
+app.get('/searches/new', (request, response) => {
+  response.render('pages/searches/new')
 })
 
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
