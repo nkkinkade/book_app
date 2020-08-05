@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 // AJAX might POST a body with JSON in it
 app.use(express.json());
 
+
 // Page Routes
 app.get('/', (request, response) => {
   let viewModel = {
@@ -25,32 +26,45 @@ app.get('/', (request, response) => {
 })
 
 app.get('/searches/new', (request, response) => {
-  response.render('pages/searches/new')
+  let viewModel = {
+
+  }
+  response.render('pages/searches/new',viewModel)
 })
 
-app.post('/searches', createSearch);
+app.post('/searches/new', createSearch);
 
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
 
 
-
 function createSearch(request, response) {
-  let url = 'https://www.googleapis.com/books/v1/volumes?q=';
-
-  if (request.body.search[1] === 'title') { url += `+intitle:${request.body.search[0]}`; }
-  if (request.body.search[1] === 'author') { url += `+inauthor:${request.body.search[0]}`; }
-  superagent.get(url)
-    .then(googleResponse => googleResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
-    .then(results => response.render('pages/show', {searchRes: results })
-    );
+  let url = 'https://www.googleapis.com/books/v1/volumes';
+  return superagent.get(url)
+    .query({
+      q:
+    })
+    .then(data=> {
+      console.log(data.body);
+      response.send(data)
+    })
+    .catch(err=> {
+      console.log(err)
+    });
+  // if (request.body.search[1] === 'title') { url += `+intitle:${request.body.search[0]}`; }
+  // if (request.body.search[1] === 'author') { url += `+inauthor:${request.body.search[0]}`; }
+  // superagent.get(url)
+  //   .then(googleResponse => googleResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
+  //   .then(results => response.render('pages/show', {searchRes: results })
+  //   );
 }
 
-function Book(info) {
-  const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
-  this.image = info.image || placeholderImage;
-  this.title = info.title || 'No title available';
-  this.author = info.author || 'No author available';
-}
+// function Book(info) {
+//   const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
+//   this.image = info.image || placeholderImage;
+//   this.title = info.title || 'No title available';
+//   this.author = info.author || 'No author available';
+// }
+
 
 // Use this as a talking point about environment variables
 const PORT = process.env.PORT || 3000;
