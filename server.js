@@ -62,6 +62,7 @@ function createSearch(request, response) {
 
 function Book(bookData) {
   const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
+  this.url = bookData.url ? bookData.url.replace('http:', 'https:') : 'https://i.imgur.com/J5LVHEL.jpg';
   this.title = bookData.volumeInfo.title;
   this.authors = bookData.volumeInfo.authors;
   this.description = bookData.volumeInfo.description
