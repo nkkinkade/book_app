@@ -2,13 +2,15 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Collection</title>
+    <link rel="stylesheet" href="./styles/base.css">
   </head>
   <body>
     <main>
       <h4>Search by Title or Author</h4>
       <form action="/searches" method="post">
-        <input type="text" name="q" placeholder="Enter a title or author" required>
+        <input type="text" name="q" placeholder="Enter a title or author" required><br>
         <button type="submit">Search the Google Books API</button>
       </form>
     </main>

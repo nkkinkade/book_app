@@ -64,6 +64,7 @@ function Book(bookData) {
   const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
   this.title = bookData.volumeInfo.title;
   this.authors = bookData.volumeInfo.authors;
+  this.description = bookData.volumeInfo.description
   this.categories = bookData.volumeInfo.categories
   this.image = bookData.volumeInfo.imageLinks.smallThumbnail;
 }
