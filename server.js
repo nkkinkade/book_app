@@ -32,38 +32,41 @@ app.get('/searches/new', (request, response) => {
   response.render('pages/searches/new',viewModel)
 })
 
-app.post('/searches/new', createSearch);
+app.post('/searches', createSearch);
 
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
 
 
 function createSearch(request, response) {
-  let url = 'https://www.googleapis.com/books/v1/volumes';
+  let url = 'https://www.googleapis.com/books/v1/volumes?';
+  // let {search} = request.body
+  console.log(request.body)
   return superagent.get(url)
     .query({
-      q:
+      q: request.body.q
     })
     .then(data=> {
-      console.log(data.body);
-      response.send(data)
+      // console.log(data.body.items);
+      let bookData = data.body.items
+      let books = [];
+      bookData.forEach(book => books.push(new Book(book)))
+      return books
+    })
+    .then(results => {
+      response.render('pages/searches/show',{searchResults:results})
     })
     .catch(err=> {
       console.log(err)
     });
-  // if (request.body.search[1] === 'title') { url += `+intitle:${request.body.search[0]}`; }
-  // if (request.body.search[1] === 'author') { url += `+inauthor:${request.body.search[0]}`; }
-  // superagent.get(url)
-  //   .then(googleResponse => googleResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
-  //   .then(results => response.render('pages/show', {searchRes: results })
-  //   );
 }
 
-// function Book(info) {
-//   const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
-//   this.image = info.image || placeholderImage;
-//   this.title = info.title || 'No title available';
-//   this.author = info.author || 'No author available';
-// }
+function Book(bookData) {
+  const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
+  this.title = bookData.volumeInfo.title;
+  this.authors = bookData.volumeInfo.authors;
+  this.categories = bookData.volumeInfo.categories
+  this.image = bookData.volumeInfo.imageLinks.smallThumbnail;
+}
 
 
 // Use this as a talking point about environment variables
