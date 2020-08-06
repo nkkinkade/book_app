@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./styles/base.css">
+</head>
+<body>
+  <header>
+    <h1>Hello World!</h1>
+    <ul>
+        <li><a href="./search">Book Search</a></li>
+        <li><a href="./library">Library</a></li>
+    </ul>
+</header>
+  <main>
+    <% searchResults.forEach(book=> { %>
+      <section>
+        <ul>
+          <p><img src=<%= book.image_url %>></p>
+          <h4><%= book.title %></h4>
+          <p><%= book.authors %></p>
+          <!-- <p><%= book.isbn %></p> -->
+        </ul>
+        <form action="/book" method="post">
+          <input type="hidden" name="title" value="<%= book.title%>">
+          <input type="hidden" name="authors" value="<%= book.authors%>">
+          <input type="hidden" name="image_url" value="<%= book.image_url%>">          
+          <input type="hidden" name="description" value="<%= book.description%>">
+          <input type="hidden" name="isbn" value="<%= book.isbn%>">
+          <button type="submit">Save to Library</button>
+        </form>
+      </section>
+    <% }) %>
+  </main>
+</body>
+</html>

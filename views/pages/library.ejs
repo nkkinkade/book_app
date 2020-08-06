@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  
+</head>
+<body>
+  <header>
+    <h1>Hello World!</h1>
+    <ul>
+        <li><a href="./search">Book Search</a></li>
+        <li><a href="./library">Library</a></li>
+    </ul>
+</header>
+
+  <section class="books container">
+    <ul id="books">
+      <% results.forEach(book => { %>
+        <li class="book" data-id="<%= book.id %>">
+          <img src="<%= book.image_url %>" alt="">
+          <h4><%= book.title %></h4>
+          <p><%= book.authors %></p>
+          <p><%= book.isbn %></p>
+          <a href="/library/<%= book.id%>">Full Description</a>
+        </li>
+      <% }) %>
+    </ul>
+</section>
+  
+</body>
+</html>
