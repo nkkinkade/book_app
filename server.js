@@ -3,8 +3,7 @@
 const express = require('express');
 const superagent = require('superagent');
 const pg = require('pg');
-// const { response } = require('express');
-// const { response } = require('express');
+
 require('dotenv').config();
 
 const app = express();
@@ -31,7 +30,7 @@ app.get('/', (request, response) => {
   response.render('pages/index', viewModel);
 });
 app.get('/library',getBooks);
-
+app.get('/library/:id', getOneTask);
 app.post('/book',addBook);
 
 app.get('/search', (request, response) => {
@@ -95,12 +94,27 @@ function Book(bookData) {
   const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
   // this.url = bookData.url ? bookData.url.replace('http:', 'https:') : 'https://i.imgur.com/J5LVHEL.jpg';
   this.title = bookData.volumeInfo.title ? bookData.volumeInfo.title: 'No Title Available';
-  this.authors = bookData.volumeInfo.authors.join(', ').toString() ? bookData.volumeInfo.authors: 'No Authors Available';
-  this.image_url = bookData.volumeInfo.imageLinks.smallThumbnail ? bookData.volumeInfo.imageLinks.smallThumbnail : placeholderImage;
+  this.authors = bookData.volumeInfo.authors
+    ? bookData.volumeInfo.authors.join(', ')
+    : 'No Authors Available';
+  this.image_url = bookData.volumeInfo.imageLinks
+    ? bookData.volumeInfo.imageLinks.smallThumbnail : placeholderImage;
   this.description = bookData.volumeInfo.description ? bookData.volumeInfo.description: 'No Description Available';
-  this.isbn = bookData.volumeInfo.industryIdentifiers.map(i=> i.identifier).join(', ').toString() ? bookData.volumeInfo.industryIdentifiers: 'No ISBN Available';
+  this.isbn = bookData.volumeInfo.industryIdentifiers.map(i=> i.identifier).join(', ')
 }
 
+
+function getOneTask(request, response) {
+  let SQL = 'SELECT * FROM books WHERE id=$1;';
+  let values = [request.params.id];
+
+  return client.query(SQL, values)
+    .then(result => {
+      // console.log('single', result.rows[0]);
+      return response.render('pages/show-description', { book: result.rows[0] });
+    })
+    .catch(err => handleError(err, response));
+}
 
 // Use this as a talking point about environment variables
 const PORT = process.env.PORT || 3000;
